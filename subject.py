@@ -25,7 +25,7 @@ class Subject:
         self.generate_subject()
     
     def __repr__(self) -> str:
-        return f'Subject({self.code.upper()})'
+        return f'Subject("{self.code.upper()}")'
 
     def generate_link(self) -> str:
         return f'https://handbook.unimelb.edu.au/2022/subjects/{self.code}'
@@ -52,18 +52,28 @@ class Subject:
 
         #get co/nonrequisites
         entry = requirements.find('h3', string="Corequisites")
-        # print(entry.next_sibling())
-        cotable = entry.next_sibling.find('table')
 
+        #requires extra testing
+        cotable = entry.next_sibling.find('table')
         if cotable:
             self.corequisites = [
                 row.td.text.lower() 
                 for row in cotable.find_all('tr')
                 if row.find('td')
             ]
+        
+        entry = requirements.find('h3', string="Non-allowed subjects")
+        notable = entry.next_sibling.find('table')
+        if notable:
+            self.non_allowed = [
+                row.td.text.lower() 
+                for row in notable.find_all('tr')
+                if row.find('td')
+            ]
     
     def pprint(self):
         print(f'{self.name}:')
+        print(self.generate_link())
         print(
             'Semesters available:', 
             ', '.join(self.semesters_available)
@@ -71,4 +81,8 @@ class Subject:
         print(
             'Corequisites:', 
             ', '.join([x.upper() for x in self.corequisites])
+        )
+        print(
+            'Non allowed subjects:', 
+            ', '.join([x.upper() for x in self.non_allowed])
         )

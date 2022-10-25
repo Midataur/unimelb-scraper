@@ -1,4 +1,4 @@
 from subject import Subject
 
-numerical = Subject('PHYC90008')
-numerical.pprint()
+test = Subject('MAST10005')
+test.pprint()
